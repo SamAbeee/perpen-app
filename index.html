@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1d4ed8">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <title>Perpen Bank Jateng</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(160deg, #1d4ed8 0%, #2563eb 45%, #0ea5e9 100%);
+      color: #1e293b;
+    }
+
+    #login { min-height: 100%; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .kartu {
+      width: 100%; max-width: 400px; background: #fff; border-radius: 32px;
+      padding: 40px 28px 30px; text-align: center;
+      box-shadow: 0 25px 60px rgba(15, 23, 42, 0.28);
+      animation: naik .6s cubic-bezier(.2,.8,.2,1) both;
+    }
+    @keyframes naik { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+
+    .logo-luar {
+      width: 112px; height: 112px; margin: 0 auto 22px; border-radius: 50%;
+      background: #dbe7ff; display: flex; align-items: center; justify-content: center;
+    }
+    .logo-bingkai {
+      width: 96px; height: 96px; border-radius: 50%; background: #fff;
+      border: 4px solid #2563eb; display: flex; align-items: center; justify-content: center; overflow: hidden;
+    }
+    .logo-bingkai img { width: 78px; height: 78px; object-fit: contain; }
+
+    h1 { margin: 0 0 8px; font-size: 24px; font-weight: 800; letter-spacing: -.3px; color: #1e293b; }
+    .sub { margin: 0 0 26px; font-size: 14px; line-height: 1.5; color: #64748b; font-weight: 500; }
+
+    .kolom { position: relative; margin-bottom: 14px; }
+    .kolom input[type=password], .kolom input[type=text] {
+      width: 100%; padding: 16px 52px 16px 18px; font-size: 16px; font-family: inherit; font-weight: 500;
+      border: 2px solid #dbe7ff; border-radius: 18px; outline: none; background: #fff; color: #1e293b;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .kolom input:focus { border-color: #2563eb; box-shadow: 0 0 0 4px rgba(37, 99, 235, .12); }
+    .kolom input::placeholder { color: #94a3b8; }
+    #mata {
+      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+      width: 40px; height: 40px; border: none; background: transparent; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; border-radius: 50%; color: #64748b;
+    }
+    #mata:active { background: #eef3ff; }
+    #mata svg { width: 22px; height: 22px; }
+
+    .ingat { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; color: #64748b; margin: 0 4px 18px; text-align: left; cursor: pointer; }
+    .ingat input { width: 18px; height: 18px; margin: 0; accent-color: #2563eb; }
+
+    #btnMasuk {
+      width: 100%; padding: 17px; font-size: 17px; font-weight: 700; font-family: inherit; color: #fff; cursor: pointer;
+      border: none; border-radius: 18px;
+      background: linear-gradient(135deg, #2563eb, #0ea5e9);
+      box-shadow: 0 10px 24px rgba(37, 99, 235, .35);
+      transition: transform .12s, box-shadow .12s;
+    }
+    #btnMasuk:active { transform: translateY(2px) scale(.99); box-shadow: 0 4px 12px rgba(37, 99, 235, .3); }
+    #btnMasuk:disabled { opacity: .7; }
+
+    .pesan { min-height: 18px; margin: 12px 0 0; font-size: 13px; font-weight: 600; color: #dc2626; }
+    .kaki { margin-top: 26px; font-size: 13px; color: #94a3b8; font-weight: 500; }
+
+    /* Tombol pasang: meluncur lembut dari bawah */
+    #btnInstall {
+      position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom));
+      transform: translate(-50%, 140%); opacity: 0; pointer-events: none;
+      display: flex; align-items: center; gap: 10px;
+      padding: 15px 26px; font-size: 16px; font-weight: 700; font-family: inherit; color: #fff; white-space: nowrap;
+      border: 1px solid rgba(255,255,255,.25); border-radius: 999px; cursor: pointer;
+      background: rgba(30, 64, 175, .92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 14px 34px rgba(15, 23, 42, .35);
+      transition: transform .7s cubic-bezier(.22,1,.36,1), opacity .7s ease;
+      z-index: 20;
+    }
+    #btnInstall.tampil { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+    #btnInstall:active { transform: translate(-50%, 2px) scale(.98); }
+
+    /* Aplikasi di dalam bingkai */
+    #app { display: none; position: fixed; inset: 0; background: #fff; }
+    #bar { height: 40px; background: #1d4ed8; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; font-size: 13px; font-weight: 700; }
+    #bar button { background: #fff; color: #1d4ed8; border: none; border-radius: 999px; padding: 5px 14px; font-weight: 700; font-family: inherit; cursor: pointer; }
+    #frame { width: 100%; height: calc(100% - 40px); border: 0; }
+  </style>
+</head>
+<body>
+
+  <div id="login">
+    <div class="kartu">
+      <div class="logo-luar"><div class="logo-bingkai"><img src="icon-192.png" alt="Logo Perpen"></div></div>
+      <h1>PERPEN BANK JATENG</h1>
+      <p class="sub">Masukkan kata sandi untuk mengakses<br>Aplikasi Korwil Surakarta</p>
+
+      <div class="kolom">
+        <input type="password" id="sandi" placeholder="Kata sandi" autocomplete="current-password">
+        <button type="button" id="mata" aria-label="Lihat atau sembunyikan sandi">
+          <svg id="ikonMata" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
+      </div>
+
+      <label class="ingat"><input type="checkbox" id="ingat"> Ingat saya di perangkat ini</label>
+      <button id="btnMasuk">Masuk</button>
+      <p class="pesan" id="pesan"></p>
+      <div class="kaki">Khusus Pengurus Perpen Korwil Surakarta</div>
+    </div>
+  </div>
+
+  <button id="btnInstall">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="M7 10l5 5 5-5"></path><path d="M5 21h14"></path></svg>
+    Pasang ke Layar Utama
+  </button>
+
+  <div id="app">
+    <div id="bar"><span>Perpen Bank Jateng</span><button id="btnKeluar">KELUAR</button></div>
+    <iframe id="frame" title="Aplikasi"></iframe>
+  </div>
+
+  <script>
+    var URL_APP = "https://script.google.com/macros/s/AKfycbzio5r3ho8Nqctt00MEoYNuG_AYbrySu2yUWd15YWNouBiksdGA41N-bDO-ZbJX6ezl3A/exec";
+
+    var IKON_BUKA = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+    var IKON_TUTUP = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+
+    function masuk(kunci) {
+      document.getElementById('frame').src = URL_APP + "?k=" + encodeURIComponent(kunci);
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      document.getElementById('btnInstall').classList.remove('tampil');
+    }
+
+    // Lihat / sembunyikan sandi
+    document.getElementById('mata').onclick = function () {
+      var inp = document.getElementById('sandi');
+      var tampil = inp.type === 'password';
+      inp.type = tampil ? 'text' : 'password';
+      document.getElementById('ikonMata').innerHTML = tampil ? IKON_TUTUP : IKON_BUKA;
+    };
+
+    document.getElementById('btnMasuk').onclick = function () {
+      var kunci = document.getElementById('sandi').value;
+      var pesan = document.getElementById('pesan');
+      if (!kunci) { pesan.innerText = "Isi kata sandi dulu."; return; }
+      pesan.innerText = "";
+      try {
+        if (document.getElementById('ingat').checked) localStorage.setItem('kunciPerpen', kunci);
+      } catch (e) {}
+      masuk(kunci);
+    };
+    document.getElementById('sandi').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') document.getElementById('btnMasuk').click();
+    });
+
+    document.getElementById('btnKeluar').onclick = function () {
+      try { localStorage.removeItem('kunciPerpen'); } catch (e) {}
+      document.getElementById('frame').src = "about:blank";
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('login').style.display = 'flex';
+      document.getElementById('sandi').value = "";
+      if (promptPasang) document.getElementById('btnInstall').classList.add('tampil');
+    };
+
+    // Masuk otomatis jika "Ingat saya" pernah dicentang
+    try {
+      var tersimpan = localStorage.getItem('kunciPerpen');
+      if (tersimpan) masuk(tersimpan);
+    } catch (e) {}
+
+    // Tombol pasang: muncul lembut dari bawah
+    var promptPasang = null;
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      promptPasang = e;
+      if (document.getElementById('app').style.display !== 'block') {
+        setTimeout(function () { document.getElementById('btnInstall').classList.add('tampil'); }, 900);
+      }
+    });
+    document.getElementById('btnInstall').onclick = function () {
+      if (!promptPasang) return;
+      promptPasang.prompt();
+      promptPasang = null;
+      this.classList.remove('tampil');
+    };
+    window.addEventListener('appinstalled', function () {
+      document.getElementById('btnInstall').classList.remove('tampil');
+    });
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+</body>
+</html>
